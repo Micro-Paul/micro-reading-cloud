@@ -1,0 +1,55 @@
+server:
+  port: 8010
+spring:
+  application:
+    # 服务逻辑名称
+    name: micro-reading-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: book-center-rpc
+          uri: lb://micro-reading-book
+          predicates:
+            - path=/book/**
+            - Method=GET
+          filters:
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: forward:/fallback
+            # 限流配置
+            - name: RequestRateLimiter
+              args:
+                # 每秒允许处理的请求数量
+                redis-rate-limiter.replenishRate: 3
+                # 每秒最大处理的请求数量
+                redis-rate-limiter.burstCapacity: 5
+                # 限流策略，对应策略的Bean
+                key-resolver: "#{@ipKeyResolver}"
+        - id: account-center-rpc
+          uri: lb://micro-reading-account
+          predicates:
+            - path=/account/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: forward:/fallback
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 3
+                redis-rate-limiter.burstCapacity: 5
+                key-resolver: "#{@ipKeyResolver}"
+hystrix:
+  threadpool:
+    default:
+      # 并发执行的最大线程数，默认10
+      coreSize: 20
+      # BlockingQueue的最大队列数，默认值-1
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold:400

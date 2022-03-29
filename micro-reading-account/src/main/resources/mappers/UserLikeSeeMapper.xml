@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.micro.reading.cloud.account.dao.UserLikeSeeMapper">
+
+
+    <sql id="Base_Column_List">
+      id, user_id, book_id, create_time
+    </sql>
+
+    <insert id="insert" parameterType="org.micro.reading.cloud.common.pojo.account.UserLikeSee">
+       insert into user_like_see (id, user_id, book_id, create_time)
+      values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{bookId,jdbcType=VARCHAR}, now())
+    </insert>
+
+
+    <delete id="deleteByUserIdAndBookId">
+        delete from user_like_see
+        where book_id = #{bookId} and user_id = #{userId}
+    </delete>
+    <select id="findPageWithCount" resultType="java.lang.Integer">
+        select count(1)
+        from user_like_see
+        where book_id = #{bookId,jdbcType=VARCHAR}
+    </select>
+    <select id="findPageWithResult" resultType="org.micro.reading.cloud.common.pojo.account.UserLikeSee">
+        select
+        <include refid="Base_Column_List"/>
+        from user_like_see
+        where user_id = #{userId}
+    </select>
+    <select id="selectCountByUserAndBookId" resultType="java.lang.Integer">
+        select count(1) from user_like_see
+        where user_id=#{userId} and book_id=#{bookId}
+    </select>
+</mapper>

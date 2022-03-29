@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.micro.reading.cloud.homepage.dao.IndexPageConfigMapper">
+
+    <sql id="Base_Column_List">
+      id, page_type, item_type, item_id, start_date, end_date, sort_number, creater, create_time,
+      update_time, updater
+    </sql>
+
+    <select id="findPageWithResult" parameterType="java.lang.Integer" resultType="org.micro.reading.cloud.common.pojo.index.IndexPageConfig">
+        select
+        <include refid="Base_Column_List" />
+        from  index_page_config
+        where page_type = #{pageType,jdbcType=INTEGER}
+        order by sort_number
+    </select>
+</mapper>

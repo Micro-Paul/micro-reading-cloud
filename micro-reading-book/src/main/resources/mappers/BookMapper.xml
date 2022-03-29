@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.micro.reading.cloud.book.dao.BookMapper">
+
+
+    <sql id="Base_Column_List">
+      id, author_id, dic_category, dic_channel, dic_serial_status, online_status, book_id,
+      book_name, book_score, key_word, img_url, author_name, introduction, isbn, word_count,
+      creater, create_time, update_time, updater
+    </sql>
+
+    <!--<select id="selectById" resultType="org.micro.reading.cloud.common.pojo.book.Book">-->
+
+
+    <!--</select>-->
+    <select id="selectByBookId" resultType="org.micro.reading.cloud.common.pojo.book.Book">
+        select
+        <include refid="Base_Column_List" />
+        from  book
+        where book_id = #{bookId}
+    </select>
+</mapper>

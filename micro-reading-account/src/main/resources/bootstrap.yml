@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: micro-reading-account
+
+  cloud:
+    nacos:
+      # 配置中心
+      config:
+        server-addr: 192.168.2.31:8848
+        file-extension: yml
+        refresh: true
+        shared-dataids: light-reading-cloud-account.yml
+        namespace: bf5e4971-7f59-4b50-8b47-d25f3d248570
+      # 注册中心
+      discovery:
+        server-addr: 192.168.2.31:8848
+        namespace: bf5e4971-7f59-4b50-8b47-d25f3d248570

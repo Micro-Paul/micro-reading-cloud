@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.micro.reading.cloud.account.dao.UserBookshelfMapper">
+
+
+    <sql id="Base_Column_List">
+      id, user_id, book_id, last_chapter_id, last_read_time, create_time
+    </sql>
+
+    <insert id="insert">
+        insert into user_bookshelf ( user_id, book_id,
+        last_chapter_id, last_read_time, create_time
+        )
+         values ( #{userId,jdbcType=INTEGER}, #{bookId,jdbcType=VARCHAR},
+        #{lastChapterId,jdbcType=INTEGER}, #{lastReadTime,jdbcType=BIGINT}, now()
+        )
+    </insert>
+    <update id="updateByUserIdAndBookId">
+        update user_bookshelf
+        <set>
+            <if test="bookId != null">
+                book_id = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastChapterId != null">
+                last_chapter_id = #{lastChapterId,jdbcType=INTEGER},
+            </if>
+            <if test="lastReadTime != null">
+                last_read_time = #{lastReadTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=INTEGER} and book_id = #{bookId}
+    </update>
+    <delete id="deleteById">
+        delete from user_bookshelf
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+
+    <sql id="findPageWithWhere">
+        <where>1=1
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </sql>
+    <select id="findPageWithResult" resultType="org.micro.reading.cloud.common.pojo.account.UserBookshelf">
+        select
+        <include refid="Base_Column_List"/>
+        from user_bookshelf
+        <include refid="findPageWithWhere"/>
+        order by last_read_time desc
+    </select>
+    <select id="selectCountByUserAndBookId" resultType="java.lang.Integer">
+        select count(1) from user_bookshelf
+        where user_id=#{userId} and book_id=#{bookId}
+    </select>
+</mapper>
